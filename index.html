@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Pieśni kościelne</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: 'Cinzel', serif;
+}
+
+#menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100%;
+    background: #111;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+button {
+    width: 100%;
+    margin: 6px 0;
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#screen {
+    margin-left: 280px;
+    padding: 40px;
+    font-size: 48px;
+    white-space: pre-line;
+}
+</style>
+</head>
+<body>
+
+<div id="menu">
+<h2>Pieśni</h2>
+<button onclick="pokaz('barka')">Barka</button>
+<button onclick="pokaz('madonna')">Czarna Madonna</button>
+</div>
+
+<div id="screen">
+Wybierz pieśń
+</div>
+
+<script>
+const piesni = {
+  barka: `Pan kiedyś stanął nad brzegiem
+Szukał ludzi gotowych pójść za Nim`,
+
+  madonna: `Jest zakątek na tej ziemi
+Gdzie powracać każdy chce`
+};
+
+function pokaz(nazwa) {
+  document.getElementById("screen").textContent = piesni[nazwa];
+}
+</script>
+
+</body>
+</html>
