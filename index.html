@@ -4,14 +4,15 @@
 <meta charset="UTF-8">
 <title>Pieśni kościelne</title>
 
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<!-- Pixelowa czcionka -->
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
   background: #000;
-  color: #fff;
-  font-family: 'EB Garamond', serif;
+  color: #0f0; /* klasyczny zielony pixel look */
+  font-family: 'Press Start 2P', cursive;
   overflow: hidden;
 }
 
@@ -22,7 +23,7 @@ body {
   top: 0;
   width: 320px;
   height: 100%;
-  background: rgba(10,10,10,0.95);
+  background: rgba(0,0,0,0.95);
   padding: 20px;
   overflow-y: auto;
   box-shadow: 4px 0 20px rgba(0,0,0,0.6);
@@ -37,17 +38,17 @@ body {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .song {
   width: 100%;
   margin: 4px 0;
-  padding: 8px;
-  font-size: 16px;
+  padding: 6px;
+  font-size: 10px;
   background: #111;
   border: none;
-  color: #ddd;
+  color: #0f0;
   cursor: pointer;
 }
 .song:hover {
@@ -57,23 +58,23 @@ body {
 /* EKRAN */
 #screen {
   margin-left: 340px;
-  padding: 60px;
+  padding: 40px;
   height: 100vh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  text-shadow: 2px 2px 8px #000;
+  text-shadow: 1px 1px 4px #000;
 }
 
 #title {
-  font-size: 60px;
+  font-size: 36px;
   text-align: center;
   margin-bottom: 20px;
 }
 
 #verse {
-  font-size: 44px;
+  font-size: 18px;
   line-height: 1.5;
   text-align: center;
   white-space: pre-line;
@@ -87,8 +88,8 @@ body {
 }
 
 .ctrl {
-  font-size: 20px;
-  padding: 10px 20px;
+  font-size: 12px;
+  padding: 6px 12px;
   margin: 0 10px;
   cursor: pointer;
 }
@@ -117,7 +118,7 @@ body {
 </div>
 
 <script>
-// 50 pieśni z przykładowymi zwrotkami
+// 50 przykładowych pieśni
 const songs = [];
 for(let i=1;i<=50;i++){
   songs.push({
@@ -198,3 +199,4 @@ document.addEventListener('keydown',function(e){
 
 </body>
 </html>
+
