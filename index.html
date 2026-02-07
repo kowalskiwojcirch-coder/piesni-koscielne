@@ -4,15 +4,16 @@
 <meta charset="UTF-8">
 <title>Pieśni kościelne</title>
 
-<!-- Elegancka czcionka -->
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #1a1a1a, #000);
+  background: url('https://images.unsplash.com/photo-1591012911206-11c1d933c34e?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+  background-size: cover;
   color: #f5f5f5;
   font-family: 'EB Garamond', serif;
+  overflow: hidden;
 }
 
 /* MENU */
@@ -30,8 +31,14 @@ body {
 
 #menu h2 {
   text-align: center;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+#search {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 
 .song {
@@ -57,6 +64,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-shadow: 1px 1px 4px #000;
 }
 
 #title {
@@ -91,21 +99,17 @@ body {
 <body>
 
 <div id="menu">
-  <h2>Pieśni (50+)</h2>
+  <h2>Pieśni kościelne</h2>
+  <input type="text" id="search" placeholder="Szukaj pieśni..." onkeyup="searchSongs()">
 
-  <!-- przykładowe tytuły (dodawaj dalej) -->
-  <button class="song" onclick="loadSong(0)">Barka</button>
-  <button class="song" onclick="loadSong(1)">Czarna Madonna</button>
-  <button class="song" onclick="loadSong(2)">Abba Ojcze</button>
-  <button class="song" onclick="loadSong(3)">Kiedy ranne wstają zorze</button>
-  <button class="song" onclick="loadSong(4)">Z dawna Polski Tyś Królową</button>
-
-  <!-- duplikuj te linie do 50+ -->
+  <div id="songList">
+    <!-- Pieśni będą wygenerowane dynamicznie -->
+  </div>
 </div>
 
 <div id="screen">
   <div id="title">Wybierz pieśń</div>
-  <div id="verse">Tekst zwrotki pojawi się tutaj</div>
+  <div id="verse">Zwrotka pojawi się tutaj</div>
 
   <div id="controls">
     <button class="ctrl" onclick="prevVerse()">⬅ Poprzednia</button>
@@ -114,83 +118,93 @@ body {
 </div>
 
 <script>
+// Przykładowe pieśni (dodaj własne do 50+)
 const songs = [
-  {
-    title: "Barka",
-    verses: [
-`Pan kiedyś stanął nad brzegiem
-Szukał ludzi gotowych pójść za Nim`,
-
-`By łowić serca
-Słów Bożych prawdą`
-    ]
-  },
-  {
-    title: "Czarna Madonna",
-    verses: [
-`Jest zakątek na tej ziemi
-Gdzie powracać każdy chce`,
-
-`Gdzie króluje Jej Oblicze
-Na Jasnej Górze`
-    ]
-  },
-  {
-    title: "Abba Ojcze",
-    verses: [
-`Ty wyzwoliłeś nas Panie
-Z kajdan i samych siebie`,
-
-`A Chrystus stał się Barankiem
-Ofiarą miłości`
-    ]
-  },
-  {
-    title: "Kiedy ranne wstają zorze",
-    verses: [
-`Kiedy ranne wstają zorze
-Tobie ziemia, Tobie morze`,
-
-`Tobie śpiewa żywioł wszelki
-Chwałę Tobie`
-    ]
-  },
-  {
-    title: "Z dawna Polski Tyś Królową",
-    verses: [
-`Z dawna Polski Tyś Królową, Maryjo`,
-
-`Ty za nami przemów słowo, Maryjo`
-    ]
-  }
-
-  // DODAWAJ TU KOLEJNE PIEŚNI (do 50+)
+  {title:"Barka", bg:"https://images.unsplash.com/photo-1606788075764-1362aa8debe1?auto=format&fit=crop&w=1950&q=80", verses:[
+    `Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim`,
+    `By łowić serca\nSłów Bożych prawdą`,
+    `Z Nim płynęli przez życie\nNie lękając się niczego`
+  ]},
+  {title:"Czarna Madonna", bg:"https://images.unsplash.com/photo-1617196038748-2a4c5ff35e17?auto=format&fit=crop&w=1950&q=80", verses:[
+    `Jest zakątek na tej ziemi\nGdzie powracać każdy chce`,
+    `Gdzie króluje Jej Oblicze\nNa Jasnej Górze`,
+    `Tam modlitwa płynie z serc\nNiech Maryja czuwa`
+  ]},
+  {title:"Abba Ojcze", bg:"https://images.unsplash.com/photo-1617196038748-2a4c5ff35e17?auto=format&fit=crop&w=1950&q=80", verses:[
+    `Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie`,
+    `A Chrystus stał się Barankiem\nOfiarą miłości`,
+    `Jego miłość nas prowadzi\nPrzez dni i noce`
+  ]},
+  // dodaj kolejne pieśni tutaj do 50+
 ];
 
-let currentSong = 0;
+let currentSong = null;
 let currentVerse = 0;
 
-function loadSong(index) {
+// GENEROWANIE LISTY PIEŚNI
+function generateSongList(){
+  const list = document.getElementById("songList");
+  list.innerHTML="";
+  songs.forEach((song,i)=>{
+    const btn = document.createElement("button");
+    btn.className="song";
+    btn.textContent=song.title;
+    btn.onclick = ()=>loadSong(i);
+    list.appendChild(btn);
+  });
+}
+
+generateSongList();
+
+// WYSZUKIWARKA
+function searchSongs(){
+  const term = document.getElementById("search").value.toLowerCase();
+  const list = document.getElementById("songList");
+  list.innerHTML="";
+  songs.forEach((song,i)=>{
+    if(song.title.toLowerCase().includes(term)){
+      const btn = document.createElement("button");
+      btn.className="song";
+      btn.textContent=song.title;
+      btn.onclick = ()=>loadSong(i);
+      list.appendChild(btn);
+    }
+  });
+}
+
+// ŁADOWANIE PIEŚNI
+function loadSong(index){
   currentSong = index;
   currentVerse = 0;
   document.getElementById("title").textContent = songs[index].title;
   document.getElementById("verse").textContent = songs[index].verses[0];
+  document.body.style.backgroundImage = `url('${songs[index].bg}')`;
 }
 
-function nextVerse() {
-  if (currentVerse < songs[currentSong].verses.length - 1) {
+// PRZEWIJANIE ZWROTEK
+function nextVerse(){
+  if(currentSong===null) return;
+  if(currentVerse<songs[currentSong].verses.length-1){
     currentVerse++;
     document.getElementById("verse").textContent = songs[currentSong].verses[currentVerse];
   }
 }
 
-function prevVerse() {
-  if (currentVerse > 0) {
+function prevVerse(){
+  if(currentSong===null) return;
+  if(currentVerse>0){
     currentVerse--;
     document.getElementById("verse").textContent = songs[currentSong].verses[currentVerse];
   }
 }
+
+// STEROWANIE STRZAŁKAMI
+document.addEventListener('keydown',function(e){
+  if(e.key==="ArrowRight") nextVerse();
+  if(e.key==="ArrowLeft") prevVerse();
+});
 </script>
 
 </body>
 </html>
+
