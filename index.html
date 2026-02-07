@@ -4,14 +4,15 @@
 <meta charset="UTF-8">
 <title>Pieśni kościelne</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+<!-- Elegancka czcionka -->
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
-  background: black;
-  color: white;
-  font-family: 'Cinzel', serif;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  color: #f5f5f5;
+  font-family: 'EB Garamond', serif;
 }
 
 /* MENU */
@@ -19,29 +20,70 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 300px;
+  width: 320px;
   height: 100%;
-  background: #111;
+  background: rgba(10,10,10,0.95);
   padding: 20px;
-  overflow-y: auto; /* PRZEWIJANIE LISTY */
+  overflow-y: auto;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.6);
 }
 
-button {
+#menu h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.song {
   width: 100%;
-  margin: 6px 0;
-  padding: 10px;
+  margin: 4px 0;
+  padding: 8px;
   font-size: 16px;
+  background: #111;
+  border: none;
+  color: #ddd;
   cursor: pointer;
+}
+.song:hover {
+  background: #222;
 }
 
 /* EKRAN */
 #screen {
-  margin-left: 320px;
-  padding: 40px;
-  font-size: 42px;
-  white-space: pre-line;
+  margin-left: 340px;
+  padding: 60px;
   height: 100vh;
-  overflow-y: auto; /* PRZEWIJANIE TEKSTU */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#title {
+  font-size: 56px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#verse {
+  font-size: 42px;
+  line-height: 1.4;
+  text-align: center;
+  white-space: pre-line;
+  flex-grow: 1;
+}
+
+/* KONTROLA */
+#controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.ctrl {
+  font-size: 18px;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -49,56 +91,104 @@ button {
 <body>
 
 <div id="menu">
-  <h2>Pieśni kościelne</h2>
+  <h2>Pieśni (50+)</h2>
 
-  <!-- LISTA PIEŚNI -->
-  <button onclick="pokaz(0)">Barka</button>
-  <button onclick="pokaz(1)">Czarna Madonna</button>
-  <button onclick="pokaz(2)">Abba Ojcze</button>
-  <button onclick="pokaz(3)">Kiedy ranne wstają zorze</button>
-  <button onclick="pokaz(4)">Z dawna Polski Tyś Królową</button>
+  <!-- przykładowe tytuły (dodawaj dalej) -->
+  <button class="song" onclick="loadSong(0)">Barka</button>
+  <button class="song" onclick="loadSong(1)">Czarna Madonna</button>
+  <button class="song" onclick="loadSong(2)">Abba Ojcze</button>
+  <button class="song" onclick="loadSong(3)">Kiedy ranne wstają zorze</button>
+  <button class="song" onclick="loadSong(4)">Z dawna Polski Tyś Królową</button>
 
-  <!-- możesz dodać 200+ takich -->
+  <!-- duplikuj te linie do 50+ -->
 </div>
 
 <div id="screen">
-  Wybierz pieśń z listy
+  <div id="title">Wybierz pieśń</div>
+  <div id="verse">Tekst zwrotki pojawi się tutaj</div>
+
+  <div id="controls">
+    <button class="ctrl" onclick="prevVerse()">⬅ Poprzednia</button>
+    <button class="ctrl" onclick="nextVerse()">Następna ➡</button>
+  </div>
 </div>
 
 <script>
-const piesni = [
-`BARKA
+const songs = [
+  {
+    title: "Barka",
+    verses: [
+`Pan kiedyś stanął nad brzegiem
+Szukał ludzi gotowych pójść za Nim`,
 
-Pan kiedyś stanął nad brzegiem
-Szukał ludzi gotowych pójść za Nim
-By łowić serca słów Bożych prawdą`,
+`By łowić serca
+Słów Bożych prawdą`
+    ]
+  },
+  {
+    title: "Czarna Madonna",
+    verses: [
+`Jest zakątek na tej ziemi
+Gdzie powracać każdy chce`,
 
-`CZARNA MADONNA
+`Gdzie króluje Jej Oblicze
+Na Jasnej Górze`
+    ]
+  },
+  {
+    title: "Abba Ojcze",
+    verses: [
+`Ty wyzwoliłeś nas Panie
+Z kajdan i samych siebie`,
 
-Jest zakątek na tej ziemi
-Gdzie powracać każdy chce
-Gdzie króluje Jej Oblicze`,
+`A Chrystus stał się Barankiem
+Ofiarą miłości`
+    ]
+  },
+  {
+    title: "Kiedy ranne wstają zorze",
+    verses: [
+`Kiedy ranne wstają zorze
+Tobie ziemia, Tobie morze`,
 
-`ABBA OJCZE
+`Tobie śpiewa żywioł wszelki
+Chwałę Tobie`
+    ]
+  },
+  {
+    title: "Z dawna Polski Tyś Królową",
+    verses: [
+`Z dawna Polski Tyś Królową, Maryjo`,
 
-Ty wyzwoliłeś nas Panie
-Z kajdan i samych siebie
-A Chrystus stał się Barankiem`,
+`Ty za nami przemów słowo, Maryjo`
+    ]
+  }
 
-`KIEDY RANNE WSTAJĄ ZORZE
-
-Kiedy ranne wstają zorze
-Tobie ziemia, Tobie morze
-Tobie śpiewa żywioł wszelki`,
-
-`Z DAWNA POLSKI TYŚ KRÓLOWĄ
-
-Z dawna Polski Tyś Królową, Maryjo
-Ty za nami przemów słowo, Maryjo`
+  // DODAWAJ TU KOLEJNE PIEŚNI (do 50+)
 ];
 
-function pokaz(nr) {
-  document.getElementById("screen").textContent = piesni[nr];
+let currentSong = 0;
+let currentVerse = 0;
+
+function loadSong(index) {
+  currentSong = index;
+  currentVerse = 0;
+  document.getElementById("title").textContent = songs[index].title;
+  document.getElementById("verse").textContent = songs[index].verses[0];
+}
+
+function nextVerse() {
+  if (currentVerse < songs[currentSong].verses.length - 1) {
+    currentVerse++;
+    document.getElementById("verse").textContent = songs[currentSong].verses[currentVerse];
+  }
+}
+
+function prevVerse() {
+  if (currentVerse > 0) {
+    currentVerse--;
+    document.getElementById("verse").textContent = songs[currentSong].verses[currentVerse];
+  }
 }
 </script>
 
