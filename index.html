@@ -10,7 +10,7 @@
 body {
   margin: 0;
   background: #000;
-  color: #f5f5f5;
+  color: #fff;
   font-family: 'EB Garamond', serif;
   overflow: hidden;
 }
@@ -63,18 +63,18 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  text-shadow: 1px 1px 4px #000;
+  text-shadow: 2px 2px 8px #000;
 }
 
 #title {
-  font-size: 56px;
+  font-size: 60px;
   text-align: center;
   margin-bottom: 20px;
 }
 
 #verse {
-  font-size: 42px;
-  line-height: 1.4;
+  font-size: 44px;
+  line-height: 1.5;
   text-align: center;
   white-space: pre-line;
   flex-grow: 1;
@@ -87,7 +87,7 @@ body {
 }
 
 .ctrl {
-  font-size: 18px;
+  font-size: 20px;
   padding: 10px 20px;
   margin: 0 10px;
   cursor: pointer;
@@ -102,7 +102,7 @@ body {
   <input type="text" id="search" placeholder="Szukaj pieśni..." onkeyup="searchSongs()">
 
   <div id="songList">
-    <!-- Pieśni będą wygenerowane dynamicznie -->
+    <!-- Pieśni wygenerowane dynamicznie -->
   </div>
 </div>
 
@@ -117,58 +117,23 @@ body {
 </div>
 
 <script>
-// Przykladowe pieśni – można łatwo dodać 50+ i zwrotki
-const songs = [
-  {title:"Barka", verses:[
-    `Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim`,
-    `By łowić serca\nSłów Bożych prawdą`,
-    `Z Nim płynęli przez życie\nNie lękając się niczego`
-  ]},
-  {title:"Czarna Madonna", verses:[
-    `Jest zakątek na tej ziemi\nGdzie powracać każdy chce`,
-    `Gdzie króluje Jej Oblicze\nNa Jasnej Górze`,
-    `Tam modlitwa płynie z serc\nNiech Maryja czuwa`
-  ]},
-  {title:"Abba Ojcze", verses:[
-    `Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie`,
-    `A Chrystus stał się Barankiem\nOfiarą miłości`,
-    `Jego miłość nas prowadzi\nPrzez dni i noce`
-  ]},
-  {title:"Kiedy ranne wstają zorze", verses:[
-    `Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze`,
-    `Tobie śpiewa żywioł wszelki\nChwałę Tobie`
-  ]},
-  {title:"Z dawna Polski Tyś Królową", verses:[
-    `Z dawna Polski Tyś Królową, Maryjo`,
-    `Ty za nami przemów słowo, Maryjo`
-  ]},
-  {title:"Wesoły nam dzień nastał", verses:[
-    `Wesoły nam dzień nastał\nRadujmy się w Panu`,
-    `Chwała Bogu na wysokości\nPokój ludziom dobrej woli`
-  ]},
-  {title:"O Stworzycielu Duchu", verses:[
-    `O Stworzycielu Duchu przyjdź\nI napełnij serca wiernych`,
-    `Ty, który jesteś miłością\nNapełnij nas swoim światłem`
-  ]},
-  {title:"Chwalcie łąki umajone", verses:[
-    `Chwalcie łąki umajone\nChwalcie łąki umajone`,
-    `Chwalcie lasy, góry i doliny\nChwalcie wszystko wokoło`
-  ]},
-  {title:"Ciebie Boże chwalimy", verses:[
-    `Ciebie Boże chwalimy\nCiebie Panie wysławiamy`,
-    `Dziękujemy Ci za wszystko\nI prosimy o łaski`
-  ]},
-  {title:"Ojcze nasz", verses:[
-    `Ojcze nasz, któryś jest w niebie\nŚwięć się imię Twoje`,
-    `Przyjdź królestwo Twoje\nBądź wola Twoja`
-  ]}
-  // Dodawaj kolejne do 50+
-];
+// 50 pieśni z przykładowymi zwrotkami
+const songs = [];
+for(let i=1;i<=50;i++){
+  songs.push({
+    title:`Pieśń ${i}`,
+    verses:[
+      `Zwrotka 1 pieśni ${i}\nTekst przykładowy`,
+      `Zwrotka 2 pieśni ${i}\nTekst przykładowy`,
+      `Zwrotka 3 pieśni ${i}\nTekst przykładowy`
+    ]
+  });
+}
 
 let currentSong = null;
 let currentVerse = 0;
 
-// GENEROWANIE LISTY PIEŚNI
+// Generowanie listy pieśni
 function generateSongList(){
   const list = document.getElementById("songList");
   list.innerHTML="";
@@ -183,7 +148,7 @@ function generateSongList(){
 
 generateSongList();
 
-// WYSZUKIWARKA
+// Wyszukiwarka
 function searchSongs(){
   const term = document.getElementById("search").value.toLowerCase();
   const list = document.getElementById("songList");
@@ -199,7 +164,7 @@ function searchSongs(){
   });
 }
 
-// ŁADOWANIE PIEŚNI
+// Ładowanie pieśni
 function loadSong(index){
   currentSong = index;
   currentVerse = 0;
@@ -207,7 +172,7 @@ function loadSong(index){
   document.getElementById("verse").textContent = songs[index].verses[0];
 }
 
-// PRZEWIJANIE ZWROTEK
+// Przewijanie zwrotek
 function nextVerse(){
   if(currentSong===null) return;
   if(currentVerse<songs[currentSong].verses.length-1){
@@ -224,7 +189,7 @@ function prevVerse(){
   }
 }
 
-// STEROWANIE STRZAŁKAMI
+// Sterowanie strzałkami
 document.addEventListener('keydown',function(e){
   if(e.key==="ArrowRight") nextVerse();
   if(e.key==="ArrowLeft") prevVerse();
