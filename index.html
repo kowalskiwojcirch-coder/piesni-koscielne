@@ -9,8 +9,7 @@
 <style>
 body {
   margin: 0;
-  background: url('https://images.unsplash.com/photo-1591012911206-11c1d933c34e?auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
-  background-size: cover;
+  background: #000;
   color: #f5f5f5;
   font-family: 'EB Garamond', serif;
   overflow: hidden;
@@ -118,24 +117,52 @@ body {
 </div>
 
 <script>
-// Przykładowe pieśni (dodaj własne do 50+)
+// Przykladowe pieśni – można łatwo dodać 50+ i zwrotki
 const songs = [
-  {title:"Barka", bg:"https://images.unsplash.com/photo-1606788075764-1362aa8debe1?auto=format&fit=crop&w=1950&q=80", verses:[
+  {title:"Barka", verses:[
     `Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim`,
     `By łowić serca\nSłów Bożych prawdą`,
     `Z Nim płynęli przez życie\nNie lękając się niczego`
   ]},
-  {title:"Czarna Madonna", bg:"https://images.unsplash.com/photo-1617196038748-2a4c5ff35e17?auto=format&fit=crop&w=1950&q=80", verses:[
+  {title:"Czarna Madonna", verses:[
     `Jest zakątek na tej ziemi\nGdzie powracać każdy chce`,
     `Gdzie króluje Jej Oblicze\nNa Jasnej Górze`,
     `Tam modlitwa płynie z serc\nNiech Maryja czuwa`
   ]},
-  {title:"Abba Ojcze", bg:"https://images.unsplash.com/photo-1617196038748-2a4c5ff35e17?auto=format&fit=crop&w=1950&q=80", verses:[
+  {title:"Abba Ojcze", verses:[
     `Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie`,
     `A Chrystus stał się Barankiem\nOfiarą miłości`,
     `Jego miłość nas prowadzi\nPrzez dni i noce`
   ]},
-  // dodaj kolejne pieśni tutaj do 50+
+  {title:"Kiedy ranne wstają zorze", verses:[
+    `Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze`,
+    `Tobie śpiewa żywioł wszelki\nChwałę Tobie`
+  ]},
+  {title:"Z dawna Polski Tyś Królową", verses:[
+    `Z dawna Polski Tyś Królową, Maryjo`,
+    `Ty za nami przemów słowo, Maryjo`
+  ]},
+  {title:"Wesoły nam dzień nastał", verses:[
+    `Wesoły nam dzień nastał\nRadujmy się w Panu`,
+    `Chwała Bogu na wysokości\nPokój ludziom dobrej woli`
+  ]},
+  {title:"O Stworzycielu Duchu", verses:[
+    `O Stworzycielu Duchu przyjdź\nI napełnij serca wiernych`,
+    `Ty, który jesteś miłością\nNapełnij nas swoim światłem`
+  ]},
+  {title:"Chwalcie łąki umajone", verses:[
+    `Chwalcie łąki umajone\nChwalcie łąki umajone`,
+    `Chwalcie lasy, góry i doliny\nChwalcie wszystko wokoło`
+  ]},
+  {title:"Ciebie Boże chwalimy", verses:[
+    `Ciebie Boże chwalimy\nCiebie Panie wysławiamy`,
+    `Dziękujemy Ci za wszystko\nI prosimy o łaski`
+  ]},
+  {title:"Ojcze nasz", verses:[
+    `Ojcze nasz, któryś jest w niebie\nŚwięć się imię Twoje`,
+    `Przyjdź królestwo Twoje\nBądź wola Twoja`
+  ]}
+  // Dodawaj kolejne do 50+
 ];
 
 let currentSong = null;
@@ -178,7 +205,6 @@ function loadSong(index){
   currentVerse = 0;
   document.getElementById("title").textContent = songs[index].title;
   document.getElementById("verse").textContent = songs[index].verses[0];
-  document.body.style.backgroundImage = `url('${songs[index].bg}')`;
 }
 
 // PRZEWIJANIE ZWROTEK
@@ -207,4 +233,3 @@ document.addEventListener('keydown',function(e){
 
 </body>
 </html>
-
