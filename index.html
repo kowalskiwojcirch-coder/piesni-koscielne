@@ -31,7 +31,7 @@ body{
 #tvText{
   color:#ff9900;
   font-size:52px;
-  line-height:1.9;
+  line-height:1.8;
   text-align:center;
   white-space:pre-line;
   width:100%;
@@ -41,16 +41,16 @@ body{
 .dot{
   position:absolute;
   color:#ff9900;
-  font-size:40px;
+  font-size:56px;
 }
-.tl{top:15px;left:15px}
-.tr{top:15px;right:15px}
-.bl{bottom:15px;left:15px}
-.br{bottom:15px;right:15px}
+.tl{top:20px;left:20px}
+.tr{top:20px;right:20px}
+.bl{bottom:20px;left:20px}
+.br{bottom:20px;right:20px}
 
 /* ===== PANEL ===== */
 #side{
-  width:380px;
+  width:400px;
   padding:20px;
   display:flex;
   flex-direction:column;
@@ -59,7 +59,7 @@ body{
 
 /* ===== EDYCJA ===== */
 textarea{
-  height:120px;
+  height:150px;
   resize:none;
   padding:10px;
   font-size:16px;
@@ -128,67 +128,78 @@ textarea{
 <!-- PANEL -->
 <div id="side">
 
-  <textarea id="input" placeholder="Wpisz własny tekst (zwrotki Enterem)"></textarea>
+<textarea id="input" placeholder="Wpisz tekst (pusta linia = nowa zwrotka)"></textarea>
 
-  <div id="tugal">
-    <div id="lcd">TUGAL OFF</div>
-    <div id="led"></div>
+<div id="tugal">
+  <div id="lcd">TUGAL OFF</div>
+  <div id="led"></div>
 
-    <div id="keys">
-      <button class="key" onclick="prev()">▲</button>
-      <button class="key" onclick="next()">▼</button>
-      <button class="key" onclick="toggle()">ON/OFF</button>
+  <div id="keys">
+    <button class="key" onclick="prev()">▲</button>
+    <button class="key" onclick="next()">▼</button>
+    <button class="key" onclick="toggle()">ON/OFF</button>
 
-      <button class="key" onclick="loadSong(0)">1</button>
-      <button class="key" onclick="loadSong(1)">2</button>
-      <button class="key" onclick="loadSong(2)">3</button>
+    <button class="key" onclick="loadSong(1)">1</button>
+    <button class="key" onclick="loadSong(2)">2</button>
+    <button class="key" onclick="loadSong(3)">3</button>
 
-      <button class="key" onclick="loadCustom()">TXT</button>
-      <button class="key" onclick="clearTV()">CLR</button>
-      <button class="key"></button>
-    </div>
+    <button class="key" onclick="loadSong(4)">4</button>
+    <button class="key" onclick="loadSong(5)">5</button>
+    <button class="key" onclick="loadSong(6)">6</button>
+
+    <button class="key" onclick="loadSong(7)">7</button>
+    <button class="key" onclick="loadSong(8)">8</button>
+    <button class="key" onclick="loadSong(9)">9</button>
+
+    <button class="key" onclick="loadSong(0)">0</button>
+    <button class="key" onclick="loadCustom()">TXT</button>
+    <button class="key" onclick="clearTV()">CLR</button>
   </div>
+</div>
 
 </div>
 
 <script>
-const songs=[
- {title:"Barka",verses:["Pan kiedyś stanął nad brzegiem","By łowić serca słów Bożych prawdą"]},
- {title:"Abba Ojcze",verses:["Ty wyzwoliłeś nas Panie","Chrystus stał się Barankiem"]},
- {title:"Czarna Madonna",verses:["Jest zakątek na tej ziemi","Na Jasnej Górze"]}
-];
+const songs={
+  1:["Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim"],
+  2:["Wszystkie, Jezu, prace moje\nWszystkie troski, trudy znoje\nSercu Twemu ofiaruję"],
+  3:["Abba Ojcze, Duch prowadzi nas"],
+};
 
-let tvOn=false,lines=[],i=0;
+let tvOn=false,verses=[],v=0;
 
 function toggle(){
- tvOn=!tvOn;
- document.getElementById("tv").style.display=tvOn?"flex":"none";
- document.getElementById("led").className=tvOn?"on":"";
- document.getElementById("lcd").textContent=tvOn?"TUGAL ON":"TUGAL OFF";
+  tvOn=!tvOn;
+  document.getElementById("tv").style.display=tvOn?"flex":"none";
+  document.getElementById("led").className=tvOn?"on":"";
+  document.getElementById("lcd").textContent=tvOn?"TUGAL ON":"TUGAL OFF";
 }
 
 function loadSong(n){
- if(!tvOn) return;
- lines=songs[n].verses;i=0;update();
- document.getElementById("lcd").textContent=songs[n].title;
+  if(!tvOn || !songs[n]) return;
+  verses=[songs[n]];
+  v=0;
+  update();
+  document.getElementById("lcd").textContent="PIESN "+n;
 }
 
 function loadCustom(){
- if(!tvOn) return;
- lines=document.getElementById("input").value.split("\n");
- i=0;update();
- document.getElementById("lcd").textContent="TEKST WL";
+  if(!tvOn) return;
+  verses=document.getElementById("input").value.split("\n\n");
+  v=0;
+  update();
+  document.getElementById("lcd").textContent="TEKST";
 }
 
 function update(){
- document.getElementById("tvText").textContent=lines[i]||"";
+  document.getElementById("tvText").textContent=verses[v]||"";
 }
 
-function next(){if(i<lines.length-1){i++;update();}}
-function prev(){if(i>0){i--;update();}}
+function next(){if(v<verses.length-1){v++;update();}}
+function prev(){if(v>0){v--;update();}}
 
 function clearTV(){
- document.getElementById("tvText").textContent="";
+  document.getElementById("tvText").textContent="";
 }
 </script>
 
