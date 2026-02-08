@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Tugal – projekcja kościelna</title>
+<title>Tugal kościelny – projekcja</title>
 
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 
@@ -12,6 +12,7 @@ body{
   background:#111;
   height:100vh;
   display:flex;
+  font-family:'VT323', monospace;
 }
 
 /* ===== TV ===== */
@@ -19,79 +20,70 @@ body{
   flex:1;
   margin:30px;
   background:#000;
-  border:18px solid #222;
+  border:18px solid #1a1a1a;
   box-shadow:0 0 60px #000;
-  padding:50px;
+  padding:60px;
   box-sizing:border-box;
   position:relative;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-family:'VT323', monospace;
+}
+
+#tv.off{
+  background:#000;
 }
 
 #tvText{
   color:#ff9900;
-  font-size:48px;
-  line-height:1.8;
+  font-size:52px;
+  line-height:1.9;
   text-align:center;
   white-space:pre-line;
   width:100%;
 }
 
-/* gwiazdki */
-.star{
+/* kropki boczne */
+.dot{
   position:absolute;
   color:#ff9900;
   font-size:28px;
 }
-.tl{top:10px;left:10px}
-.tr{top:10px;right:10px}
-.bl{bottom:10px;left:10}
-.br{bottom:10px;right:10px}
+.left{left:15px;top:50%;transform:translateY(-50%)}
+.right{right:15px;top:50%;transform:translateY(-50%)}
 
 /* ===== PANEL BOCZNY ===== */
 #side{
-  width:420px;
+  width:360px;
   padding:20px;
   display:flex;
   flex-direction:column;
   gap:15px;
 }
 
-/* EDYTOR */
-textarea{
-  flex:1;
-  resize:none;
-  font-size:18px;
-  padding:15px;
-}
-
-/* PRZYCISKI */
-button{
-  padding:10px;
-  font-size:16px;
-  cursor:pointer;
-}
-
 /* ===== TUGAL ===== */
 #tugal{
-  background:#2b2b2b;
-  padding:15px;
+  background:#2a2a2a;
+  padding:16px;
   border:2px solid #111;
+  box-shadow:inset 0 0 15px #000;
   font-family:'Press Start 2P', monospace;
 }
 
+/* LCD */
 #lcd{
-  background:#0f0;
-  color:#030;
-  height:70px;
+  background:#1e2f1e;
+  color:#9fd89f;
+  height:80px;
   padding:8px;
   font-size:10px;
-  margin-bottom:10px;
+  line-height:1.4;
+  box-shadow:inset 0 0 10px #000;
+  margin-bottom:12px;
   white-space:pre-line;
 }
 
+/* klawiatura */
 #keys{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -100,9 +92,14 @@ button{
 
 .key{
   background:#333;
-  color:#0f0;
-  border:none;
+  color:#9fd89f;
+  border:1px solid #111;
   padding:10px 0;
+  cursor:pointer;
+}
+
+.key:active{
+  background:#555;
 }
 </style>
 </head>
@@ -111,74 +108,87 @@ button{
 
 <!-- TV -->
 <div id="tv">
-  <div class="star tl">*</div>
-  <div class="star tr">*</div>
-  <div class="star bl">*</div>
-  <div class="star br">*</div>
-
-  <div id="tvText">*</div>
+  <div class="dot left">•</div>
+  <div class="dot right">•</div>
+  <div id="tvText">Wybierz pieśń</div>
 </div>
 
 <!-- BOK -->
 <div id="side">
 
-  <textarea id="input" placeholder="Wpisz lub wklej tekst pieśni..."></textarea>
-
-  <button onclick="sendText()">WYŚWIETL</button>
-  <button onclick="clearText()">WYCZYŚĆ</button>
-
   <!-- TUGAL -->
   <div id="tugal">
-    <div id="lcd">SYSTEM OK</div>
+    <div id="lcd">SYSTEM OK\nWYBIERZ PIESN</div>
 
     <div id="keys">
-      <button class="key" onclick="scrollUp()">▲</button>
-      <button class="key" onclick="scrollDown()">▼</button>
-      <button class="key" onclick="clearText()">CLR</button>
+      <button class="key" onclick="prevVerse()">▲</button>
+      <button class="key" onclick="nextVerse()">▼</button>
+      <button class="key" onclick="toggleTV()">ON/OFF</button>
+
+      <button class="key" onclick="loadSong(0)">1</button>
+      <button class="key" onclick="loadSong(1)">2</button>
+      <button class="key" onclick="loadSong(2)">3</button>
+
+      <button class="key" onclick="loadSong(3)">4</button>
+      <button class="key" onclick="loadSong(4)">5</button>
+      <button class="key" onclick="loadSong(5)">6</button>
     </div>
   </div>
 
 </div>
 
 <script>
-const tvText = document.getElementById("tvText");
-const input = document.getElementById("input");
-const lcd = document.getElementById("lcd");
+const songs=[
+ {title:"Barka",verses:[
+  "Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
+  "By łowić serca\nSłów Bożych prawdą",
+  "Z Nim płynęli przez życie\nNie lękając się niczego"
+ ]},
+ {title:"Abba Ojcze",verses:[
+  "Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie",
+  "Chrystus stał się Barankiem\nOfiarą miłości"
+ ]},
+ {title:"Czarna Madonna",verses:[
+  "Jest zakątek na tej ziemi\nGdzie powracać każdy chce",
+  "Gdzie króluje Jej Oblicze\nNa Jasnej Górze"
+ ]},
+ {title:"Kiedy ranne wstają zorze",verses:[
+  "Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze",
+  "Tobie śpiewa żywioł wszelki\nChwałę Tobie"
+ ]},
+ {title:"Z dawna Polski",verses:[
+  "Z dawna Polski Tyś Królową, Maryjo",
+  "Ty za nami przemów słowo, Maryjo"
+ ]},
+ {title:"Pan blisko jest",verses:[
+  "Pan blisko jest\nOczekuj Go",
+  "Pan blisko jest\nW Nim serca moc"
+ ]}
+];
 
-let lines = [];
-let offset = 0;
+let cs=null,cv=0,tvOn=true;
 
-function sendText(){
-  lines = input.value.split("\n");
-  offset = 0;
-  updateScreen();
-  lcd.textContent = "WYSWIETLANIE\nLINIA 1";
+function loadSong(i){
+ cs=i;cv=0;update();
 }
 
-function updateScreen(){
-  let view = lines.slice(offset, offset + 6).join("\n");
-  tvText.textContent = "*\n\n" + view + "\n\n*";
+function nextVerse(){
+ if(cs!==null&&cv<songs[cs].verses.length-1){cv++;update();}
 }
 
-function scrollDown(){
-  if(offset < lines.length - 1){
-    offset++;
-    updateScreen();
-    lcd.textContent = "LINIA " + (offset + 1);
-  }
+function prevVerse(){
+ if(cs!==null&&cv>0){cv--;update();}
 }
 
-function scrollUp(){
-  if(offset > 0){
-    offset--;
-    updateScreen();
-    lcd.textContent = "LINIA " + (offset + 1);
-  }
+function toggleTV(){
+ tvOn=!tvOn;
+ document.getElementById("tv").style.display=tvOn?"flex":"none";
 }
 
-function clearText(){
-  tvText.textContent = "*";
-  lcd.textContent = "PUSTE";
+function update(){
+ document.getElementById("tvText").textContent=songs[cs].verses[cv];
+ document.getElementById("lcd").textContent=
+  songs[cs].title+"\nZWROTKA "+(cv+1);
 }
 </script>
 
