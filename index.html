@@ -2,9 +2,9 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Kościelna projekcja</title>
+<title>Tugal – projekcja kościelna</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
 body{
@@ -12,75 +12,65 @@ body{
   background:#111;
   height:100vh;
   display:flex;
-  font-family:'Libre Baskerville', serif;
 }
 
-/* ===== LEWA STRONA: TV ===== */
+/* ===== TV ===== */
 #tv{
   flex:1;
   margin:30px;
-  background:black;
+  background:#000;
   border:18px solid #222;
   box-shadow:0 0 60px #000;
-  padding:60px;
+  padding:50px;
   box-sizing:border-box;
   position:relative;
   display:flex;
   align-items:center;
   justify-content:center;
+  font-family:'VT323', monospace;
 }
 
 #tvText{
   color:#ff9900;
-  font-size:44px;
-  line-height:1.9;
+  font-size:48px;
+  line-height:1.8;
   text-align:center;
   white-space:pre-line;
   width:100%;
 }
 
-/* kropki w rogach */
-.dot{
+/* gwiazdki */
+.star{
   position:absolute;
-  width:10px;
-  height:10px;
-  background:#ff9900;
+  color:#ff9900;
+  font-size:28px;
 }
-.tl{top:15px;left:15px}
-.tr{top:15px;right:15px}
-.bl{bottom:15px;left:15px}
-.br{bottom:15px;right:15px}
+.tl{top:10px;left:10px}
+.tr{top:10px;right:10px}
+.bl{bottom:10px;left:10}
+.br{bottom:10px;right:10px}
 
-/* ===== PRAWA STRONA ===== */
+/* ===== PANEL BOCZNY ===== */
 #side{
   width:420px;
   padding:20px;
-  box-sizing:border-box;
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:15px;
 }
 
 /* EDYTOR */
-#editor{
+textarea{
   flex:1;
-}
-
-#editor textarea{
-  width:100%;
-  height:100%;
   resize:none;
   font-size:18px;
   padding:15px;
-  box-sizing:border-box;
 }
 
 /* PRZYCISKI */
-.controls button{
-  width:100%;
-  padding:12px;
+button{
+  padding:10px;
   font-size:16px;
-  margin-bottom:10px;
   cursor:pointer;
 }
 
@@ -95,10 +85,9 @@ body{
 #lcd{
   background:#0f0;
   color:#030;
-  height:80px;
+  height:70px;
   padding:8px;
-  font-size:11px;
-  line-height:1.4;
+  font-size:10px;
   margin-bottom:10px;
   white-space:pre-line;
 }
@@ -114,7 +103,6 @@ body{
   color:#0f0;
   border:none;
   padding:10px 0;
-  cursor:pointer;
 }
 </style>
 </head>
@@ -123,61 +111,74 @@ body{
 
 <!-- TV -->
 <div id="tv">
-  <div class="dot tl"></div>
-  <div class="dot tr"></div>
-  <div class="dot bl"></div>
-  <div class="dot br"></div>
+  <div class="star tl">*</div>
+  <div class="star tr">*</div>
+  <div class="star bl">*</div>
+  <div class="star br">*</div>
 
-  <div id="tvText">⋯ ⋯ ⋯ ⋯</div>
+  <div id="tvText">*</div>
 </div>
 
 <!-- BOK -->
 <div id="side">
 
-  <!-- EDYTOR -->
-  <div id="editor">
-    <textarea id="textInput" placeholder="Wpisz lub wklej tekst pieśni..."></textarea>
-  </div>
+  <textarea id="input" placeholder="Wpisz lub wklej tekst pieśni..."></textarea>
 
-  <div class="controls">
-    <button onclick="showText()">WYŚWIETL TEKST</button>
-    <button onclick="clearText()">WYCZYŚĆ / ZAKOŃCZ</button>
-    <button onclick="toggleTugal()">WŁ / WYŁ TUGAL</button>
-    <button onclick="toggleTV()">WŁ / WYŁ PROJEKCJĘ</button>
-  </div>
+  <button onclick="sendText()">WYŚWIETL</button>
+  <button onclick="clearText()">WYCZYŚĆ</button>
 
   <!-- TUGAL -->
   <div id="tugal">
     <div id="lcd">SYSTEM OK</div>
+
     <div id="keys">
-      <button class="key">1</button><button class="key">2</button><button class="key">3</button>
-      <button class="key">4</button><button class="key">5</button><button class="key">6</button>
-      <button class="key">7</button><button class="key">8</button><button class="key">9</button>
+      <button class="key" onclick="scrollUp()">▲</button>
+      <button class="key" onclick="scrollDown()">▼</button>
+      <button class="key" onclick="clearText()">CLR</button>
     </div>
   </div>
 
 </div>
 
 <script>
-const tvText=document.getElementById("tvText");
-const input=document.getElementById("textInput");
-const tugal=document.getElementById("tugal");
-const tv=document.getElementById("tv");
+const tvText = document.getElementById("tvText");
+const input = document.getElementById("input");
+const lcd = document.getElementById("lcd");
 
-function showText(){
-  tvText.textContent="⋯ ⋯ ⋯ ⋯\n\n"+input.value+"\n\n⋯ ⋯ ⋯ ⋯";
+let lines = [];
+let offset = 0;
+
+function sendText(){
+  lines = input.value.split("\n");
+  offset = 0;
+  updateScreen();
+  lcd.textContent = "WYSWIETLANIE\nLINIA 1";
+}
+
+function updateScreen(){
+  let view = lines.slice(offset, offset + 6).join("\n");
+  tvText.textContent = "*\n\n" + view + "\n\n*";
+}
+
+function scrollDown(){
+  if(offset < lines.length - 1){
+    offset++;
+    updateScreen();
+    lcd.textContent = "LINIA " + (offset + 1);
+  }
+}
+
+function scrollUp(){
+  if(offset > 0){
+    offset--;
+    updateScreen();
+    lcd.textContent = "LINIA " + (offset + 1);
+  }
 }
 
 function clearText(){
-  tvText.textContent="⋯ ⋯ ⋯ ⋯";
-}
-
-function toggleTugal(){
-  tugal.style.display = tugal.style.display==="none"?"block":"none";
-}
-
-function toggleTV(){
-  tv.style.display = tv.style.display==="none"?"flex":"none";
+  tvText.textContent = "*";
+  lcd.textContent = "PUSTE";
 }
 </script>
 
