@@ -2,96 +2,106 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Tugal – projekcja kościelna</title>
+<title>Tugal kościelny + projekcja</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
-body {
-  margin: 0;
-  background: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  font-family: 'Press Start 2P', monospace;
+body{
+  margin:0;
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-family:'Press Start 2P', monospace;
 }
 
-/* CAŁY ZESTAW */
-#system {
-  display: flex;
-  gap: 30px;
+#system{
+  display:flex;
+  gap:40px;
 }
 
-/* TELEWIZOR / PROJEKCJA */
-#tv {
-  width: 900px;
-  height: 500px;
-  background: #000;
-  border: 14px solid #333;
-  border-radius: 14px;
-  box-shadow: 0 0 40px #000;
-  padding: 30px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* ===== TV / PROJEKCJA ===== */
+#tv{
+  width:1000px;
+  height:560px;
+  background:black;
+  border:16px solid #222;
+  box-shadow:0 0 40px black;
+  padding:40px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
-/* TEKST PROJEKCJI */
-#title {
-  color: #ff9900;
-  font-size: 32px;
-  text-align: center;
-  margin-bottom: 30px;
+#tvTitle{
+  color:#ff9900;
+  font-size:36px;
+  text-align:center;
+  margin-bottom:40px;
 }
 
-#verse {
-  color: #ff9900;
-  font-size: 28px;
-  text-align: center;
-  line-height: 1.6;
-  white-space: pre-line;
+#tvVerse{
+  color:#ff9900;
+  font-size:30px;
+  text-align:center;
+  line-height:1.7;
+  white-space:pre-line;
 }
 
-/* STEROWNIK */
-#controller {
-  width: 180px;
-  background: #222;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: inset 0 0 20px #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* ===== TUGAL ===== */
+#tugal{
+  width:280px;
+  background:#2a2a2a;
+  border-radius:10px;
+  padding:20px;
+  box-shadow:inset 0 0 15px #000;
 }
 
-/* DIODA */
-#led {
-  width: 16px;
-  height: 16px;
-  background: #0f0;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #0f0;
-  margin-bottom: 20px;
+/* LCD */
+#lcd{
+  background:#0f0;
+  color:#030;
+  height:120px;
+  padding:10px;
+  font-size:12px;
+  line-height:1.4;
+  box-shadow:inset 0 0 10px #030;
+  margin-bottom:15px;
+  white-space:pre-line;
 }
 
-/* PRZYCISKI */
-.key {
-  width: 100%;
-  padding: 14px 0;
-  margin: 8px 0;
-  background: #333;
-  color: #0f0;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
+/* LED */
+#led{
+  width:12px;
+  height:12px;
+  background:#0f0;
+  border-radius:50%;
+  box-shadow:0 0 8px #0f0;
+  margin-bottom:10px;
 }
 
-.key:active {
-  background: #0f0;
-  color: #020;
+/* KLAWIATURA */
+#keys{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.key{
+  background:#333;
+  color:#0f0;
+  border:none;
+  padding:12px 0;
+  font-size:14px;
+  cursor:pointer;
+}
+
+.key:active{
+  background:#0f0;
+  color:#030;
 }
 </style>
 </head>
@@ -100,103 +110,95 @@ body {
 
 <div id="system">
 
-  <!-- TELEWIZOR -->
+  <!-- TV -->
   <div id="tv">
-    <div id="title">Wybierz pieśń</div>
-    <div id="verse">Tekst pojawi się tutaj</div>
+    <div id="tvTitle">Wybierz pieśń</div>
+    <div id="tvVerse">---</div>
   </div>
 
-  <!-- STEROWNIK -->
-  <div id="controller">
+  <!-- TUGAL -->
+  <div id="tugal">
+    <div id="lcd">GOTOWY\nWYBIERZ PIESN</div>
     <div id="led"></div>
 
-    <button class="key" onclick="prevVerse()">▲</button>
-    <button class="key" onclick="nextVerse()">▼</button>
+    <div id="keys">
+      <button class="key" onclick="prevVerse()">▲</button>
+      <button class="key" onclick="nextVerse()">▼</button>
+      <button class="key" onclick="resetVerse()">R</button>
 
-    <button class="key" onclick="loadSong(0)">1</button>
-    <button class="key" onclick="loadSong(1)">2</button>
-    <button class="key" onclick="loadSong(2)">3</button>
-    <button class="key" onclick="loadSong(3)">4</button>
-    <button class="key" onclick="loadSong(4)">5</button>
+      <button class="key" onclick="loadSong(0)">1</button>
+      <button class="key" onclick="loadSong(1)">2</button>
+      <button class="key" onclick="loadSong(2)">3</button>
+
+      <button class="key" onclick="loadSong(3)">4</button>
+      <button class="key" onclick="loadSong(4)">5</button>
+      <button class="key">*</button>
+
+      <button class="key">#</button>
+      <button class="key" onclick="loadSong(5)">0</button>
+      <button class="key">OK</button>
+    </div>
   </div>
 
 </div>
 
 <script>
-const songs = [
-  {
-    title: "Barka",
-    verses: [
-      "Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
-      "By łowić serca\nSłów Bożych prawdą",
-      "Z Nim płynęli przez życie\nNie lękając się niczego"
-    ]
-  },
-  {
-    title: "Abba Ojcze",
-    verses: [
-      "Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie",
-      "A Chrystus stał się Barankiem\nOfiarą miłości"
-    ]
-  },
-  {
-    title: "Czarna Madonna",
-    verses: [
-      "Jest zakątek na tej ziemi\nGdzie powracać każdy chce",
-      "Gdzie króluje Jej Oblicze\nNa Jasnej Górze"
-    ]
-  },
-  {
-    title: "Kiedy ranne wstają zorze",
-    verses: [
-      "Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze",
-      "Tobie śpiewa żywioł wszelki\nChwałę Tobie"
-    ]
-  },
-  {
-    title: "Z dawna Polski Tyś Królową",
-    verses: [
-      "Z dawna Polski Tyś Królową, Maryjo",
-      "Ty za nami przemów słowo, Maryjo"
-    ]
-  }
+const songs=[
+ {title:"Barka",verses:[
+  "Pan kiedys stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
+  "By łowić serca\nSłów Bożych prawdą",
+  "Z Nim płynęli przez życie\nNie lękając się niczego"
+ ]},
+ {title:"Abba Ojcze",verses:[
+  "Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie",
+  "Chrystus stał się Barankiem\nOfiarą miłości"
+ ]},
+ {title:"Czarna Madonna",verses:[
+  "Jest zakątek na tej ziemi\nGdzie powracać każdy chce",
+  "Gdzie króluje Jej Oblicze\nNa Jasnej Górze"
+ ]},
+ {title:"Kiedy ranne wstają zorze",verses:[
+  "Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze",
+  "Tobie śpiewa żywioł wszelki\nChwałę Tobie"
+ ]},
+ {title:"Z dawna Polski",verses:[
+  "Z dawna Polski Tyś Królową, Maryjo",
+  "Ty za nami przemów słowo, Maryjo"
+ ]},
+ {title:"Pan blisko jest",verses:[
+  "Pan blisko jest\nOczekuj Go",
+  "Pan blisko jest\nW Nim serca moc"
+ ]}
 ];
 
-let currentSong = null;
-let currentVerse = 0;
+let cs=null,cv=0;
 
-function loadSong(i) {
-  currentSong = i;
-  currentVerse = 0;
-  update();
+function loadSong(i){
+ cs=i;cv=0;update();
 }
 
-function nextVerse() {
-  if (currentSong === null) return;
-  if (currentVerse < songs[currentSong].verses.length - 1) {
-    currentVerse++;
-    update();
-  }
+function nextVerse(){
+ if(cs!==null && cv<songs[cs].verses.length-1){cv++;update();}
 }
 
-function prevVerse() {
-  if (currentSong === null) return;
-  if (currentVerse > 0) {
-    currentVerse--;
-    update();
-  }
+function prevVerse(){
+ if(cs!==null && cv>0){cv--;update();}
 }
 
-function update() {
-  document.getElementById("title").textContent = songs[currentSong].title;
-  document.getElementById("verse").textContent =
-    songs[currentSong].verses[currentVerse];
+function resetVerse(){
+ if(cs!==null){cv=0;update();}
 }
 
-// klawiatura
-document.addEventListener("keydown", e => {
-  if (e.key === "ArrowUp") prevVerse();
-  if (e.key === "ArrowDown") nextVerse();
+function update(){
+ document.getElementById("tvTitle").textContent=songs[cs].title;
+ document.getElementById("tvVerse").textContent=songs[cs].verses[cv];
+ document.getElementById("lcd").textContent=
+  songs[cs].title+"\nZWROTKA "+(cv+1);
+}
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowUp")prevVerse();
+ if(e.key==="ArrowDown")nextVerse();
 });
 </script>
 
