@@ -2,34 +2,36 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Tugal kościelny + projekcja</title>
+<title>Tugal kościelny – projekcja</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Slab:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
   background:#111;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   height:100vh;
-  font-family:'Press Start 2P', monospace;
+  font-family:'Roboto Slab', serif;
 }
 
-#system{
-  display:flex;
-  gap:40px;
+/* UKŁAD */
+#stage{
+  position:relative;
+  width:100%;
+  height:100%;
 }
 
-/* ===== TV / PROJEKCJA ===== */
+/* ===== TELEWIZOR ===== */
 #tv{
-  width:1000px;
-  height:560px;
-  background:black;
-  border:16px solid #222;
-  box-shadow:0 0 40px black;
-  padding:40px;
+  position:absolute;
+  top:40px;
+  left:40px;
+  right:40px;
+  bottom:160px;
+  background:#000;
+  border:18px solid #222;
+  box-shadow:0 0 50px #000;
+  padding:60px;
   box-sizing:border-box;
   display:flex;
   flex-direction:column;
@@ -38,48 +40,53 @@ body{
 
 #tvTitle{
   color:#ff9900;
-  font-size:36px;
+  font-size:56px;
   text-align:center;
-  margin-bottom:40px;
+  margin-bottom:50px;
 }
 
 #tvVerse{
   color:#ff9900;
-  font-size:30px;
+  font-size:42px;
   text-align:center;
-  line-height:1.7;
+  line-height:1.8;
   white-space:pre-line;
 }
 
 /* ===== TUGAL ===== */
 #tugal{
-  width:280px;
-  background:#2a2a2a;
-  border-radius:10px;
-  padding:20px;
-  box-shadow:inset 0 0 15px #000;
+  position:absolute;
+  right:60px;
+  bottom:30px;
+  width:320px;
+  background:#2b2b2b;
+  border:3px solid #111;
+  border-radius:6px;
+  padding:16px;
+  box-shadow:inset 0 0 12px #000;
+  font-family:'Press Start 2P', monospace;
 }
 
 /* LCD */
 #lcd{
   background:#0f0;
   color:#030;
-  height:120px;
-  padding:10px;
-  font-size:12px;
+  height:90px;
+  padding:8px;
+  font-size:11px;
   line-height:1.4;
   box-shadow:inset 0 0 10px #030;
-  margin-bottom:15px;
   white-space:pre-line;
+  margin-bottom:10px;
 }
 
 /* LED */
 #led{
-  width:12px;
-  height:12px;
+  width:10px;
+  height:10px;
   background:#0f0;
   border-radius:50%;
-  box-shadow:0 0 8px #0f0;
+  box-shadow:0 0 6px #0f0;
   margin-bottom:10px;
 }
 
@@ -87,15 +94,15 @@ body{
 #keys{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:10px;
+  gap:8px;
 }
 
 .key{
-  background:#333;
+  background:#3a3a3a;
   color:#0f0;
-  border:none;
-  padding:12px 0;
-  font-size:14px;
+  border:1px solid #111;
+  padding:10px 0;
+  font-size:13px;
   cursor:pointer;
 }
 
@@ -108,9 +115,9 @@ body{
 
 <body>
 
-<div id="system">
+<div id="stage">
 
-  <!-- TV -->
+  <!-- TELEWIZOR -->
   <div id="tv">
     <div id="tvTitle">Wybierz pieśń</div>
     <div id="tvVerse">---</div>
@@ -118,7 +125,7 @@ body{
 
   <!-- TUGAL -->
   <div id="tugal">
-    <div id="lcd">GOTOWY\nWYBIERZ PIESN</div>
+    <div id="lcd">SYSTEM OK\nWYBIERZ PIESN</div>
     <div id="led"></div>
 
     <div id="keys">
@@ -145,7 +152,7 @@ body{
 <script>
 const songs=[
  {title:"Barka",verses:[
-  "Pan kiedys stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
+  "Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
   "By łowić serca\nSłów Bożych prawdą",
   "Z Nim płynęli przez życie\nNie lękając się niczego"
  ]},
@@ -173,21 +180,10 @@ const songs=[
 
 let cs=null,cv=0;
 
-function loadSong(i){
- cs=i;cv=0;update();
-}
-
-function nextVerse(){
- if(cs!==null && cv<songs[cs].verses.length-1){cv++;update();}
-}
-
-function prevVerse(){
- if(cs!==null && cv>0){cv--;update();}
-}
-
-function resetVerse(){
- if(cs!==null){cv=0;update();}
-}
+function loadSong(i){cs=i;cv=0;update();}
+function nextVerse(){if(cs!==null&&cv<songs[cs].verses.length-1){cv++;update();}}
+function prevVerse(){if(cs!==null&&cv>0){cv--;update();}}
+function resetVerse(){if(cs!==null){cv=0;update();}}
 
 function update(){
  document.getElementById("tvTitle").textContent=songs[cs].title;
