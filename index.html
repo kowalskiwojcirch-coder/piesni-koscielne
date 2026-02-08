@@ -2,171 +2,201 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Wirtualny sterownik pieśni</title>
+<title>Tugal – projekcja kościelna</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 <style>
 body {
   margin: 0;
-  background: #222;
+  background: #111;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  font-family: 'Press Start 2P', monospace;
 }
 
-/* OBUDOWA PANELU */
-#controller {
+/* CAŁY ZESTAW */
+#system {
   display: flex;
-  background: #333;
-  border: 6px solid #000;
-  border-radius: 16px;
-  box-shadow: 0 0 20px #000;
+  gap: 30px;
 }
 
-/* EKRAN LCD */
-#lcd {
-  width: 500px;
-  height: 250px;
-  background: #0f0;
-  color: #030;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 18px;
+/* TELEWIZOR / PROJEKCJA */
+#tv {
+  width: 900px;
+  height: 500px;
+  background: #000;
+  border: 14px solid #333;
+  border-radius: 14px;
+  box-shadow: 0 0 40px #000;
+  padding: 30px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+/* TEKST PROJEKCJI */
+#title {
+  color: #ff9900;
+  font-size: 32px;
   text-align: center;
-  padding: 20px;
-  box-shadow: inset 0 0 10px #030;
-  line-height: 1.5;
-  letter-spacing: 1px;
+  margin-bottom: 30px;
 }
 
-/* PANEL PRZYCISKÓW */
-#keys {
-  display: grid;
-  grid-template-columns: repeat(3, 60px);
-  grid-gap: 10px;
-  padding: 20px;
-  background: #111;
-  border-left: 4px solid #000;
-  border-radius: 0 12px 12px 0;
+#verse {
+  color: #ff9900;
+  font-size: 28px;
+  text-align: center;
+  line-height: 1.6;
+  white-space: pre-line;
 }
 
-.key {
-  width: 60px;
-  height: 60px;
+/* STEROWNIK */
+#controller {
+  width: 180px;
   background: #222;
-  color: #0f0;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 18px;
-  border: 2px solid #000;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: inset 0 0 20px #000;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  user-select: none;
-  transition: all 0.1s;
+}
+
+/* DIODA */
+#led {
+  width: 16px;
+  height: 16px;
+  background: #0f0;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #0f0;
+  margin-bottom: 20px;
+}
+
+/* PRZYCISKI */
+.key {
+  width: 100%;
+  padding: 14px 0;
+  margin: 8px 0;
+  background: #333;
+  color: #0f0;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .key:active {
   background: #0f0;
-  color: #030;
-  transform: translateY(2px);
+  color: #020;
 }
 </style>
 </head>
+
 <body>
 
-<div id="controller">
-  <div id="lcd">
-    <div id="songTitle">Wybierz pieśń</div>
-    <div id="songVerse">Zwrotka pojawi się tutaj</div>
+<div id="system">
+
+  <!-- TELEWIZOR -->
+  <div id="tv">
+    <div id="title">Wybierz pieśń</div>
+    <div id="verse">Tekst pojawi się tutaj</div>
   </div>
 
-  <div id="keys">
-    <div class="key" onclick="prevVerse()">↑</div>
-    <div class="key" onclick="nextVerse()">↓</div>
-    <div class="key" onclick="restartSong()">R</div>
-    <div class="key" onclick="loadSong(0)">1</div>
-    <div class="key" onclick="loadSong(1)">2</div>
-    <div class="key" onclick="loadSong(2)">3</div>
-    <div class="key" onclick="loadSong(3)">4</div>
-    <div class="key" onclick="loadSong(4)">5</div>
-    <div class="key" onclick="loadSong(5)">6</div>
+  <!-- STEROWNIK -->
+  <div id="controller">
+    <div id="led"></div>
+
+    <button class="key" onclick="prevVerse()">▲</button>
+    <button class="key" onclick="nextVerse()">▼</button>
+
+    <button class="key" onclick="loadSong(0)">1</button>
+    <button class="key" onclick="loadSong(1)">2</button>
+    <button class="key" onclick="loadSong(2)">3</button>
+    <button class="key" onclick="loadSong(3)">4</button>
+    <button class="key" onclick="loadSong(4)">5</button>
   </div>
+
 </div>
 
 <script>
-// Przykładowe pieśni
 const songs = [
-  {title:"Barka", verses:[
-    "Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
-    "By łowić serca\nSłów Bożych prawdą",
-    "Z Nim płynęli przez życie\nNie lękając się niczego"
-  ]},
-  {title:"Czarna Madonna", verses:[
-    "Jest zakątek na tej ziemi\nGdzie powracać każdy chce",
-    "Gdzie króluje Jej Oblicze\nNa Jasnej Górze",
-    "Tam modlitwa płynie z serc\nNiech Maryja czuwa"
-  ]},
-  {title:"Abba Ojcze", verses:[
-    "Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie",
-    "A Chrystus stał się Barankiem\nOfiarą miłości",
-    "Jego miłość nas prowadzi\nPrzez dni i noce"
-  ]},
-  {title:"Kiedy ranne wstają zorze", verses:[
-    "Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze",
-    "Tobie śpiewa żywioł wszelki\nChwałę Tobie"
-  ]},
-  {title:"Z dawna Polski Tyś Królową", verses:[
-    "Z dawna Polski Tyś Królową, Maryjo",
-    "Ty za nami przemów słowo, Maryjo"
-  ]}
+  {
+    title: "Barka",
+    verses: [
+      "Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim",
+      "By łowić serca\nSłów Bożych prawdą",
+      "Z Nim płynęli przez życie\nNie lękając się niczego"
+    ]
+  },
+  {
+    title: "Abba Ojcze",
+    verses: [
+      "Ty wyzwoliłeś nas Panie\nZ kajdan i samych siebie",
+      "A Chrystus stał się Barankiem\nOfiarą miłości"
+    ]
+  },
+  {
+    title: "Czarna Madonna",
+    verses: [
+      "Jest zakątek na tej ziemi\nGdzie powracać każdy chce",
+      "Gdzie króluje Jej Oblicze\nNa Jasnej Górze"
+    ]
+  },
+  {
+    title: "Kiedy ranne wstają zorze",
+    verses: [
+      "Kiedy ranne wstają zorze\nTobie ziemia, Tobie morze",
+      "Tobie śpiewa żywioł wszelki\nChwałę Tobie"
+    ]
+  },
+  {
+    title: "Z dawna Polski Tyś Królową",
+    verses: [
+      "Z dawna Polski Tyś Królową, Maryjo",
+      "Ty za nami przemów słowo, Maryjo"
+    ]
+  }
 ];
 
 let currentSong = null;
 let currentVerse = 0;
 
-function loadSong(index){
-  currentSong = index;
+function loadSong(i) {
+  currentSong = i;
   currentVerse = 0;
-  updateLCD();
+  update();
 }
 
-function nextVerse(){
-  if(currentSong===null) return;
-  if(currentVerse < songs[currentSong].verses.length-1){
+function nextVerse() {
+  if (currentSong === null) return;
+  if (currentVerse < songs[currentSong].verses.length - 1) {
     currentVerse++;
-    updateLCD();
+    update();
   }
 }
 
-function prevVerse(){
-  if(currentSong===null) return;
-  if(currentVerse > 0){
+function prevVerse() {
+  if (currentSong === null) return;
+  if (currentVerse > 0) {
     currentVerse--;
-    updateLCD();
+    update();
   }
 }
 
-function restartSong(){
-  if(currentSong!==null){
-    currentVerse = 0;
-    updateLCD();
-  }
+function update() {
+  document.getElementById("title").textContent = songs[currentSong].title;
+  document.getElementById("verse").textContent =
+    songs[currentSong].verses[currentVerse];
 }
 
-function updateLCD(){
-  document.getElementById("songTitle").textContent = songs[currentSong].title;
-  document.getElementById("songVerse").textContent = songs[currentSong].verses[currentVerse];
-}
-
-// Sterowanie strzałkami klawiatury
-document.addEventListener('keydown', function(e){
-  if(e.key === "ArrowUp") prevVerse();
-  if(e.key === "ArrowDown") nextVerse();
-  if(e.key === "r" || e.key === "R") restartSong();
+// klawiatura
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowUp") prevVerse();
+  if (e.key === "ArrowDown") nextVerse();
 });
 </script>
 
