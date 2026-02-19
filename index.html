@@ -2,92 +2,204 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Pieśni kościelne</title>
+<title>Tugal kościelny</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    background: black;
-    color: white;
-    font-family: 'Cinzel', serif;
+body{
+  margin:0;
+  background:#111;
+  height:100vh;
+  display:flex;
 }
 
-/* ===== MENU ===== */
-#menu {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 260px;
-    height: 100%;
-    background: #111;
-    padding: 20px;
-    overflow-y: auto;
+/* ===== TV ===== */
+#tv{
+  flex:1;
+  margin:30px;
+  background:#000;
+  border:20px solid #1a1a1a;
+  padding:60px;
+  position:relative;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-family:'VT323', monospace;
 }
 
-button {
-    width: 100%;
-    margin: 6px 0;
-    padding: 10px;
-    font-size: 18px;
-    cursor: pointer;
+#tvText{
+  color:#ff9900;
+  font-size:52px;
+  line-height:1.8;
+  text-align:center;
+  white-space:pre-line;
+  width:100%;
 }
 
-/* ===== EKRAN ===== */
-#screen {
-    position: relative;
-    margin-left: 280px;
-    padding: 80px;
-    font-size: 48px;
-    white-space: pre-line;
-    min-height: 100vh;
+/* kropki w rogach */
+.dot{
+  position:absolute;
+  color:#ff9900;
+  font-size:56px;
+}
+.tl{top:20px;left:20px}
+.tr{top:20px;right:20px}
+.bl{bottom:20px;left:20px}
+.br{bottom:20px;right:20px}
+
+/* ===== PANEL ===== */
+#side{
+  width:400px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
 }
 
-/* ===== GWIAZDKI W ROGACH ===== */
-.star {
-    position: absolute;
-    font-size: 60px;
-    color: white;
+/* ===== EDYCJA ===== */
+textarea{
+  height:150px;
+  resize:none;
+  padding:10px;
+  font-size:16px;
 }
 
-.tl { top: 20px; left: 20px; }
-.tr { top: 20px; right: 20px; }
-.bl { bottom: 20px; left: 20px; }
-.br { bottom: 20px; right: 20px; }
+/* ===== TUGAL ===== */
+#tugal{
+  background:#2a2a2a;
+  padding:15px;
+  border:2px solid #111;
+  font-family:'Press Start 2P', monospace;
+}
 
+/* LCD */
+#lcd{
+  background:#1c2a1c;
+  color:#9fd89f;
+  height:80px;
+  padding:8px;
+  font-size:10px;
+  box-shadow:inset 0 0 10px #000;
+  white-space:pre-line;
+}
+
+/* dioda */
+#led{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#400;
+  margin:8px 0;
+}
+#led.on{
+  background:#f00;
+  box-shadow:0 0 8px #f00;
+}
+
+/* klawiatura */
+#keys{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.key{
+  background:#333;
+  color:#9fd89f;
+  border:1px solid #111;
+  padding:10px 0;
+  cursor:pointer;
+}
 </style>
 </head>
+
 <body>
 
-<div id="menu">
-<h2>Pieśni</h2>
-<button onclick="pokaz('barka')">Barka</button>
-<button onclick="pokaz('madonna')">Czarna Madonna</button>
+<!-- TV -->
+<div id="tv">
+  <div class="dot tl">•</div>
+  <div class="dot tr">•</div>
+  <div class="dot bl">•</div>
+  <div class="dot br">•</div>
+  <div id="tvText"></div>
 </div>
 
-<div id="screen">
-    <div class="star tl">*</div>
-    <div class="star tr">*</div>
-    <div class="star bl">*</div>
-    <div class="star br">*</div>
+<!-- PANEL -->
+<div id="side">
 
-    <div id="tekst">
-        Wybierz pieśń
-    </div>
+<textarea id="input" placeholder="Wpisz tekst (pusta linia = nowa zwrotka)"></textarea>
+
+<div id="tugal">
+  <div id="lcd">TUGAL OFF</div>
+  <div id="led"></div>
+
+  <div id="keys">
+    <button class="key" onclick="prev()">▲</button>
+    <button class="key" onclick="next()">▼</button>
+    <button class="key" onclick="toggle()">ON/OFF</button>
+
+    <button class="key" onclick="loadSong(1)">1</button>
+    <button class="key" onclick="loadSong(2)">2</button>
+    <button class="key" onclick="loadSong(3)">3</button>
+
+    <button class="key" onclick="loadSong(4)">4</button>
+    <button class="key" onclick="loadSong(5)">5</button>
+    <button class="key" onclick="loadSong(6)">6</button>
+
+    <button class="key" onclick="loadSong(7)">7</button>
+    <button class="key" onclick="loadSong(8)">8</button>
+    <button class="key" onclick="loadSong(9)">9</button>
+
+    <button class="key" onclick="loadSong(0)">0</button>
+    <button class="key" onclick="loadCustom()">TXT</button>
+    <button class="key" onclick="clearTV()">CLR</button>
+  </div>
+</div>
+
 </div>
 
 <script>
-const piesni = {
-  barka: `Pan kiedyś stanął nad brzegiem
-Szukał ludzi gotowych pójść za Nim`,
-
-  madonna: `Jest zakątek na tej ziemi
-Gdzie powracać każdy chce`
+const songs={
+  1:["Pan kiedyś stanął nad brzegiem\nSzukał ludzi gotowych pójść za Nim"],
+  2:["Wszystkie, Jezu, prace moje\nWszystkie troski, trudy znoje\nSercu Twemu ofiaruję"],
+  3:["Abba Ojcze, Duch prowadzi nas"],
 };
 
-function pokaz(nazwa) {
-  document.getElementById("tekst").textContent = piesni[nazwa];
+let tvOn=false,verses=[],v=0;
+
+function toggle(){
+  tvOn=!tvOn;
+  document.getElementById("tv").style.display=tvOn?"flex":"none";
+  document.getElementById("led").className=tvOn?"on":"";
+  document.getElementById("lcd").textContent=tvOn?"TUGAL ON":"TUGAL OFF";
+}
+
+function loadSong(n){
+  if(!tvOn || !songs[n]) return;
+  verses=[songs[n]];
+  v=0;
+  update();
+  document.getElementById("lcd").textContent="PIESN "+n;
+}
+
+function loadCustom(){
+  if(!tvOn) return;
+  verses=document.getElementById("input").value.split("\n\n");
+  v=0;
+  update();
+  document.getElementById("lcd").textContent="TEKST";
+}
+
+function update(){
+  document.getElementById("tvText").textContent=verses[v]||"";
+}
+
+function next(){if(v<verses.length-1){v++;update();}}
+function prev(){if(v>0){v--;update();}}
+
+function clearTV(){
+  document.getElementById("tvText").textContent="";
 }
 </script>
 
